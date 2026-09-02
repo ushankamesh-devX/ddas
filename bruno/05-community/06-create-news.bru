@@ -1,0 +1,29 @@
+meta {
+  name: Create News
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/news
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "title": "Maintenance Notice",
+  "summary": "Routine gate inspection",
+  "content": "Routine inspection is scheduled. No emergency action is required."
+}
+}
+
+tests {
+  test("news created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+  });
+}

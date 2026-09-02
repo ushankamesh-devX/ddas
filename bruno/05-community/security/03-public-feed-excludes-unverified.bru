@@ -1,0 +1,18 @@
+meta {
+  name: Public reports exclude unverified
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/reports
+}
+
+tests {
+  test("public reports are publishable states only", function () {
+    const body = res.getBody();
+    const text = JSON.stringify(body);
+    expect(text).to.not.include('"SUBMITTED"');
+    expect(text).to.not.include('"UNDER_REVIEW"');
+  });
+}

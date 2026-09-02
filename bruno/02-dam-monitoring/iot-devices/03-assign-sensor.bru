@@ -1,0 +1,19 @@
+meta {
+  name: Assign Sensor to Device
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}/sensors/{{sensorId}}
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("sensor assigned", function () {
+    expect(res.getStatus()).to.be.oneOf([200,201,204]);
+  });
+}

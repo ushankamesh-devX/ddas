@@ -1,0 +1,41 @@
+meta {
+  name: Submit Citizen Report
+  type: http
+  seq: 2
+  tags: [
+    smoke
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/v1/reports
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{civilianToken}}
+  Idempotency-Key: bruno-report-001
+}
+
+body {
+{
+  "damId": "{{damId}}",
+  "category": "ROAD_BLOCKED",
+  "description": "Tree blocking evacuation road.",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      80.135,
+      7.131
+    ]
+  }
+}
+}
+
+tests {
+  test("report submitted", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("reportId", body.id);
+}

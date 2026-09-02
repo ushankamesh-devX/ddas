@@ -1,0 +1,27 @@
+meta {
+  name: Activate Emergency
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/emergency/activate
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+  Idempotency-Key: bruno-emergency-001
+}
+
+body {
+{
+  "reason": "Bruno emergency flow test"
+}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

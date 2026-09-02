@@ -1,0 +1,26 @@
+meta {
+  name: Revoke IoT Device
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}/revoke
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "reason": "Credential compromise test"
+}
+}
+
+tests {
+  test("device revoked", function () {
+    expect(res.getStatus()).to.be.oneOf([200,204]);
+  });
+}

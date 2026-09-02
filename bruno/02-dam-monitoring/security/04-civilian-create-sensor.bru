@@ -1,0 +1,29 @@
+meta {
+  name: Civilian cannot create sensor
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "NOPE",
+  "name": "Unauthorized",
+  "sensorType": "WATER_LEVEL",
+  "unit": "m"
+}
+}
+
+tests {
+  test("status is 403", function () {
+    expect(res.getStatus()).to.equal(403);
+  });
+}

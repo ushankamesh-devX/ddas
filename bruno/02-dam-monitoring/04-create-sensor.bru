@@ -1,0 +1,46 @@
+meta {
+  name: Create Sensor
+  type: http
+  seq: 4
+  tags: [
+    smoke
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "WL-001",
+  "name": "Reservoir Water Level",
+  "sensorType": "WATER_LEVEL",
+  "unit": "m",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      80.1234,
+      7.1234
+    ]
+  },
+  "visibility": "PUBLIC_SUMMARY",
+  "exposeExactLocation": false,
+  "warningThreshold": 80,
+  "criticalThreshold": 90
+}
+}
+
+tests {
+  test("sensor created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("sensorId", body.id);
+}

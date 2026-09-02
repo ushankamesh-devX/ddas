@@ -1,0 +1,40 @@
+meta {
+  name: Create Warning Alert
+  type: http
+  seq: 1
+  tags: [
+    smoke
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+  Idempotency-Key: bruno-alert-001
+}
+
+body {
+{
+  "severity": "WARNING",
+  "title": "High water level",
+  "message": "Monitor official instructions.",
+  "recommendedAction": "Prepare for possible evacuation.",
+  "evacuationRequired": false,
+  "riskZoneIds": [
+    "{{zoneId}}"
+  ]
+}
+}
+
+tests {
+  test("alert created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("alertId", body.id);
+}

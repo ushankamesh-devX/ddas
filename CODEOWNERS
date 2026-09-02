@@ -1,0 +1,13 @@
+# Replace @dev1 etc. with real GitHub usernames after adding the team.
+
+/backend/ @dev1 @dev4
+/admin-web/ @dev3 @dev2
+/mobile/ @dev2 @dev3
+/bruno/ @dev1 @dev2 @dev3 @dev4
+/infra/ @dev4 @dev1
+/docs/dev-plans/DEV-1-DAM-MONITORING.md @dev1
+/docs/dev-plans/DEV-2-ALERTS-NOTIFICATIONS.md @dev2
+/docs/dev-plans/DEV-3-EVACUATION-EMERGENCY.md @dev3
+/docs/dev-plans/DEV-4-COMMUNITY-INFORMATION.md @dev4
+/backend/src/main/resources/db/migration/ @dev1 @dev3
+/.github/ @dev4 @dev1

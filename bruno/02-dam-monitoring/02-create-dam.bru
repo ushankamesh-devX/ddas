@@ -1,0 +1,32 @@
+meta {
+  name: Create Dam
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "CI-DAM-001",
+  "name": "CI Test Dam",
+  "description": "Created by Bruno",
+  "isPublic": true
+}
+}
+
+tests {
+  test("dam created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("damId", body.id);
+}

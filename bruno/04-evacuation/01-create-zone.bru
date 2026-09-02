@@ -1,0 +1,63 @@
+meta {
+  name: Create Risk Zone
+  type: http
+  seq: 1
+  tags: [
+    smoke
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/risk-zones
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "CRIT-01",
+  "name": "Critical Zone 1",
+  "severity": "CRITICAL",
+  "evacuationRequired": true,
+  "publicVisible": true,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          80.12,
+          7.12
+        ],
+        [
+          80.13,
+          7.12
+        ],
+        [
+          80.13,
+          7.13
+        ],
+        [
+          80.12,
+          7.13
+        ],
+        [
+          80.12,
+          7.12
+        ]
+      ]
+    ]
+  }
+}
+}
+
+tests {
+  test("zone created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody()).to.have.property("id");
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("zoneId", body.id);
+}

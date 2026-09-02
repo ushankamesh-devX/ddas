@@ -1,0 +1,18 @@
+meta {
+  name: Public - private sensor hidden
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/sensors
+}
+
+tests {
+  test("private sensor is not present", function () {
+    const text = JSON.stringify(res.getBody());
+    if (bru.getEnvVar("privateSensorId")) {
+      expect(text).to.not.include(bru.getEnvVar("privateSensorId"));
+    }
+  });
+}

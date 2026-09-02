@@ -1,0 +1,31 @@
+meta {
+  name: Alert - missing title
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+  Idempotency-Key: negative-missing-title
+}
+
+body {
+{
+  "severity": "WARNING",
+  "message": "Test",
+  "riskZoneIds": [
+    "{{zoneId}}"
+  ]
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

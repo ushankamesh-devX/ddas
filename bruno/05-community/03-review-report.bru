@@ -1,0 +1,27 @@
+meta {
+  name: Review Citizen Report
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/reports/{{reportId}}/review
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "decision": "VERIFIED",
+  "note": "Verified by CI flow"
+}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

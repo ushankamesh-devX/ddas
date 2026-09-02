@@ -1,0 +1,18 @@
+meta {
+  name: Public summary - no sensitive fields
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/sensors
+}
+
+tests {
+  test("public payload hides internal fields", function () {
+    const text = JSON.stringify(res.getBody());
+    ["metadata","firmwareVersion","credential","serialNumber","warningThreshold","criticalThreshold"].forEach(k => {
+      expect(text).to.not.include(`"${k}"`);
+    });
+  });
+}

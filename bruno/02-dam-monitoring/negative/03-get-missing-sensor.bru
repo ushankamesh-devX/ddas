@@ -1,0 +1,19 @@
+meta {
+  name: Sensor - missing ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors/00000000-0000-0000-0000-999999999999
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("status is 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+}

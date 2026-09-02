@@ -1,0 +1,19 @@
+meta {
+  name: Get Emergency State
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/emergency
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

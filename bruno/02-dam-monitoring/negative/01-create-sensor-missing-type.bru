@@ -1,0 +1,28 @@
+meta {
+  name: Sensor - missing type
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "BAD-001",
+  "name": "Bad Sensor",
+  "unit": "m"
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

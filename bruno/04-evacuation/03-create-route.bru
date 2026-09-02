@@ -1,0 +1,50 @@
+meta {
+  name: Create Evacuation Route
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/evacuation-routes
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "ROUTE-01",
+  "name": "Critical Zone to Central School",
+  "fromZoneId": "{{zoneId}}",
+  "safeLocationId": "{{safeLocationId}}",
+  "routeStatus": "ACTIVE",
+  "publicVisible": true,
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        80.125,
+        7.125
+      ],
+      [
+        80.132,
+        7.132
+      ],
+      [
+        80.14,
+        7.14
+      ]
+    ]
+  }
+}
+}
+
+tests {
+  test("route created", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("routeId", body.id);
+}

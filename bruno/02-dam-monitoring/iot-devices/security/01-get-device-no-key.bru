@@ -1,0 +1,22 @@
+meta {
+  name: IoT GET never returns key
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("plaintext key is absent", function () {
+    expect(res.getStatus()).to.equal(200);
+    const text = JSON.stringify(res.getBody());
+    expect(text).to.not.include("deviceKey");
+    expect(text).to.not.include("secretVerifier");
+  });
+}

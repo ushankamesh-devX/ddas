@@ -1,0 +1,19 @@
+meta {
+  name: Cross-dam sensor read denied
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{otherDamId}}/sensors/{{otherDamSensorId}}
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("cross-dam access denied", function () {
+    expect([403,404]).to.include(res.getStatus());
+  });
+}

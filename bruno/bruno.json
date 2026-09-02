@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Dam Disaster Alert System V1",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

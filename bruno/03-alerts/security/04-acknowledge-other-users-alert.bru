@@ -1,0 +1,19 @@
+meta {
+  name: Civilian cannot acknowledge unrelated alert
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/alerts/me/00000000-0000-0000-0000-999999999999/acknowledge
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+}
+
+tests {
+  test("unrelated alert is not acknowledged", function () {
+    expect([403,404]).to.include(res.getStatus());
+  });
+}

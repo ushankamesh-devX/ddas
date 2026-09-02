@@ -1,0 +1,18 @@
+meta {
+  name: Public Evacuation Snapshot
+  type: http
+  seq: 4
+  tags: [
+    smoke
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/evacuation
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

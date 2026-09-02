@@ -1,0 +1,22 @@
+meta {
+  name: Rotate Device Key
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}/rotate-key
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("rotation returns new key once", function () {
+    expect(res.getStatus()).to.equal(200);
+    const body = res.getBody();
+    expect(body.credentials).to.have.property("deviceKey");
+    expect(body.credentials.shownOnce).to.equal(true);
+  });
+}

@@ -1,0 +1,44 @@
+meta {
+  name: Route cannot use another dam zone
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/evacuation-routes
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "BAD-ROUTE",
+  "name": "Cross-dam route",
+  "fromZoneId": "{{otherDamZoneId}}",
+  "safeLocationId": "{{safeLocationId}}",
+  "routeStatus": "ACTIVE",
+  "publicVisible": true,
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        80.1,
+        7.1
+      ],
+      [
+        80.2,
+        7.2
+      ]
+    ]
+  }
+}
+}
+
+tests {
+  test("cross-dam route rejected", function () {
+    expect([400,403,404,409]).to.include(res.getStatus());
+  });
+}

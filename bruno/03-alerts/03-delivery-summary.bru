@@ -1,0 +1,19 @@
+meta {
+  name: Alert Delivery Summary
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts/{{alertId}}/delivery-summary
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

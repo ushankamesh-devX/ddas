@@ -1,0 +1,27 @@
+meta {
+  name: Emergency activation idempotency
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/emergency/activate
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+  Idempotency-Key: emergency-idempotent-001
+}
+
+body {
+{
+  "reason": "Idempotent test"
+}
+}
+
+tests {
+  test("duplicate activation is safe", function () {
+    expect([200,201,409]).to.include(res.getStatus());
+  });
+}

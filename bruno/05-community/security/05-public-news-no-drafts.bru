@@ -1,0 +1,15 @@
+meta {
+  name: Public news excludes drafts
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/news
+}
+
+tests {
+  test("drafts are absent", function () {
+    expect(JSON.stringify(res.getBody())).to.not.include('"DRAFT"');
+  });
+}

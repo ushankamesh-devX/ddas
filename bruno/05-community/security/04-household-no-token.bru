@@ -1,0 +1,15 @@
+meta {
+  name: Household requires authentication
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/households/me
+}
+
+tests {
+  test("status is 401", function () {
+    expect(res.getStatus()).to.equal(401);
+  });
+}

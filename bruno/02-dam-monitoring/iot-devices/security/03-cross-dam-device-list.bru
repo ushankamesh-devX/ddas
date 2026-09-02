@@ -1,0 +1,19 @@
+meta {
+  name: Cross-dam IoT list denied
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{otherDamId}}/iot-devices
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("cross-dam device access denied", function () {
+    expect([403,404]).to.include(res.getStatus());
+  });
+}

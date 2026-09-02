@@ -1,0 +1,15 @@
+meta {
+  name: Public News
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/news
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

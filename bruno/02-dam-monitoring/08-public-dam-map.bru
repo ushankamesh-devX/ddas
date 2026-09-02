@@ -1,0 +1,15 @@
+meta {
+  name: Public Dam Map
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/map
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

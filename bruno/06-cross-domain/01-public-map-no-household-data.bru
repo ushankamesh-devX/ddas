@@ -1,0 +1,18 @@
+meta {
+  name: Public map privacy contract
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/map
+}
+
+tests {
+  test("public map does not leak private household data", function () {
+    const text = JSON.stringify(res.getBody());
+    ["householdMember","emergencyPhone","primaryUserId","deviceToken","passwordHash"].forEach(k => {
+      expect(text).to.not.include(k);
+    });
+  });
+}

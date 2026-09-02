@@ -1,0 +1,39 @@
+meta {
+  name: Create Safe Location
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/safe-locations
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "SAFE-01",
+  "name": "Central School",
+  "capacity": 500,
+  "status": "AVAILABLE",
+  "publicVisible": true,
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      80.14,
+      7.14
+    ]
+  }
+}
+}
+
+tests {
+  test("safe location created", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("safeLocationId", body.id);
+}

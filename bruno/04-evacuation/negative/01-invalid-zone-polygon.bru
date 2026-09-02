@@ -1,0 +1,49 @@
+meta {
+  name: Zone - invalid polygon
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/risk-zones
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "BAD-ZONE",
+  "name": "Bad Zone",
+  "severity": "CRITICAL",
+  "evacuationRequired": true,
+  "publicVisible": true,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          80.1,
+          7.1
+        ],
+        [
+          80.2,
+          7.2
+        ],
+        [
+          80.1,
+          7.2
+        ]
+      ]
+    ]
+  }
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

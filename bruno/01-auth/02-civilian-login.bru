@@ -1,0 +1,34 @@
+meta {
+  name: Civilian Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/login
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body {
+{
+  "email": "{{civilianEmail}}",
+  "password": "{{civilianPassword}}"
+}
+}
+
+script:post-response {
+const body = res.getBody();
+if (body && body.accessToken) {
+  bru.setEnvVar("civilianToken", body.accessToken);
+}
+}
+
+tests {
+  test("civilian can login", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("accessToken");
+  });
+}

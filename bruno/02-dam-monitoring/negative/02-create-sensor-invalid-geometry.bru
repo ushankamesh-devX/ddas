@@ -1,0 +1,36 @@
+meta {
+  name: Sensor - invalid geometry
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "BAD-GEO",
+  "name": "Bad Geometry",
+  "sensorType": "WATER_LEVEL",
+  "unit": "m",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      999,
+      999
+    ]
+  }
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Report - invalid category
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/reports
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+  Content-Type: application/json
+  Idempotency-Key: bad-report-002
+}
+
+body {
+{
+  "damId": "{{damId}}",
+  "category": "ALIENS",
+  "description": "Invalid"
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

@@ -1,0 +1,32 @@
+meta {
+  name: Alert - invalid severity
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+  Idempotency-Key: negative-bad-severity
+}
+
+body {
+{
+  "severity": "PANIC",
+  "title": "Bad",
+  "message": "Bad",
+  "riskZoneIds": [
+    "{{zoneId}}"
+  ]
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

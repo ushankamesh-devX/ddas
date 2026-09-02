@@ -1,0 +1,32 @@
+meta {
+  name: Alert cannot target other dam zone
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+  Idempotency-Key: cross-dam-zone
+}
+
+body {
+{
+  "severity": "WARNING",
+  "title": "Cross dam",
+  "message": "No",
+  "riskZoneIds": [
+    "{{otherDamZoneId}}"
+  ]
+}
+}
+
+tests {
+  test("cross-dam target rejected", function () {
+    expect([400,403,404,409]).to.include(res.getStatus());
+  });
+}

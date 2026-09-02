@@ -1,0 +1,36 @@
+meta {
+  name: Safe location - negative capacity
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/safe-locations
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "code": "BAD-SAFE",
+  "name": "Invalid Shelter",
+  "capacity": -1,
+  "status": "AVAILABLE",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      80.14,
+      7.14
+    ]
+  }
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

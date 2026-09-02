@@ -1,0 +1,28 @@
+meta {
+  name: Report - missing description
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/reports
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+  Content-Type: application/json
+  Idempotency-Key: bad-report-001
+}
+
+body {
+{
+  "damId": "{{damId}}",
+  "category": "ROAD_BLOCKED"
+}
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}

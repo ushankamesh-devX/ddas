@@ -1,0 +1,26 @@
+meta {
+  name: Cancel Alert
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts/{{alertId}}/cancel
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body {
+{
+  "reason": "Bruno regression cleanup"
+}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

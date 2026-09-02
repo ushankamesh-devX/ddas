@@ -1,0 +1,19 @@
+meta {
+  name: Cannot assign other-dam sensor
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}/sensors/{{otherDamSensorId}}
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("cross-dam sensor assignment denied", function () {
+    expect([400,403,404,409]).to.include(res.getStatus());
+  });
+}

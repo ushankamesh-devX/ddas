@@ -1,0 +1,19 @@
+meta {
+  name: My Household
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/households/me
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}

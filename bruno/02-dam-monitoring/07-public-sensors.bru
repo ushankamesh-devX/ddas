@@ -1,0 +1,24 @@
+meta {
+  name: Public Sensors
+  type: http
+  seq: 7
+  tags: [
+    smoke
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/sensors
+}
+
+tests {
+  test("public sensor endpoint works", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("response must not expose obvious internal fields", function () {
+    const body = res.getBody();
+    const text = JSON.stringify(body);
+    expect(text).to.not.include("password");
+    expect(text).to.not.include("calibrationSecret");
+  });
+}

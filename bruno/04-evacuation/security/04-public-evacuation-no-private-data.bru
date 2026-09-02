@@ -1,0 +1,16 @@
+meta {
+  name: Public evacuation excludes private data
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/evacuation
+}
+
+tests {
+  test("public evacuation payload has no private household data", function () {
+    const text = JSON.stringify(res.getBody());
+    ["household","homeLocation","emergencyPhone","deviceToken"].forEach(k => expect(text).to.not.include(`"${k}"`));
+  });
+}

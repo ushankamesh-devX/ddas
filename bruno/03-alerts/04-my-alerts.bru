@@ -1,0 +1,22 @@
+meta {
+  name: My Alerts
+  type: http
+  seq: 4
+  tags: [
+    smoke
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/v1/alerts/me
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+}
+
+tests {
+  test("returns success", function () {
+    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+  });
+}
