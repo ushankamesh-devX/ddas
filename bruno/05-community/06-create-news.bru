@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/news
+  body: json
 }
 
 headers {
@@ -13,12 +14,12 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "title": "Maintenance Notice",
   "summary": "Routine gate inspection",
   "content": "Routine inspection is scheduled. No emergency action is required."
-}
+  }
 }
 
 tests {

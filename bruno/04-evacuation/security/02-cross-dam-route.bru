@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/evacuation-routes
+  body: json
 }
 
 headers {
@@ -13,8 +14,8 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "BAD-ROUTE",
   "name": "Cross-dam route",
   "fromZoneId": "{{otherDamZoneId}}",
@@ -34,7 +35,7 @@ body {
       ]
     ]
   }
-}
+  }
 }
 
 tests {

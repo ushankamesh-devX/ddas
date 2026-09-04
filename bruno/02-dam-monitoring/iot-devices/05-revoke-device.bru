@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}/revoke
+  body: json
 }
 
 headers {
@@ -13,10 +14,10 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "reason": "Credential compromise test"
-}
+  }
 }
 
 tests {

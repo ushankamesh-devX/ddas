@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/reports
+  body: json
 }
 
 headers {
@@ -14,11 +15,11 @@ headers {
   Idempotency-Key: bad-report-001
 }
 
-body {
-{
+body:json {
+  {
   "damId": "{{damId}}",
   "category": "ROAD_BLOCKED"
-}
+  }
 }
 
 tests {

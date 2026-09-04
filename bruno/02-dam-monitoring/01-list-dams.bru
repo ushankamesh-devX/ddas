@@ -3,7 +3,7 @@ meta {
   type: http
   seq: 1
   tags: [
-    smoke
+    foundation
   ]
 }
 
@@ -17,6 +17,7 @@ headers {
 
 tests {
   test("returns success", function () {
-    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
   });
 }

@@ -2,28 +2,32 @@ meta {
   name: Civilian Login
   type: http
   seq: 2
+  tags: [
+    foundation
+  ]
 }
 
 post {
   url: {{baseUrl}}/api/v1/auth/login
+  body: json
 }
 
 headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "email": "{{civilianEmail}}",
   "password": "{{civilianPassword}}"
-}
+  }
 }
 
 script:post-response {
-const body = res.getBody();
-if (body && body.accessToken) {
-  bru.setEnvVar("civilianToken", body.accessToken);
-}
+  const body = res.getBody();
+  if (body && body.accessToken) {
+    bru.setEnvVar("civilianToken", body.accessToken);
+  }
 }
 
 tests {

@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/evacuation-routes
+  body: json
 }
 
 headers {
@@ -13,8 +14,8 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "ROUTE-01",
   "name": "Critical Zone to Central School",
   "fromZoneId": "{{zoneId}}",
@@ -38,7 +39,7 @@ body {
       ]
     ]
   }
-}
+  }
 }
 
 tests {

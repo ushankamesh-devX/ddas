@@ -9,6 +9,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+  body: json
 }
 
 headers {
@@ -17,8 +18,8 @@ headers {
   Idempotency-Key: bruno-alert-001
 }
 
-body {
-{
+body:json {
+  {
   "severity": "WARNING",
   "title": "High water level",
   "message": "Monitor official instructions.",
@@ -27,7 +28,7 @@ body {
   "riskZoneIds": [
     "{{zoneId}}"
   ]
-}
+  }
 }
 
 tests {

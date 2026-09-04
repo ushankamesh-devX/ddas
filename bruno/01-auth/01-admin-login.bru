@@ -3,35 +3,39 @@ meta {
   type: http
   seq: 1
   tags: [
-    smoke
+    foundation
   ]
 }
 
 post {
   url: {{baseUrl}}/api/v1/auth/login
+  body: json
 }
 
 headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "email": "{{adminEmail}}",
   "password": "{{adminPassword}}"
-}
+  }
 }
 
 script:post-response {
-const body = res.getBody();
-if (body && body.accessToken) {
-  bru.setEnvVar("accessToken", body.accessToken);
-}
+  const body = res.getBody();
+  if (body && body.accessToken) {
+    bru.setEnvVar("accessToken", body.accessToken);
+    bru.setEnvVar("refreshToken", body.refreshToken);
+  }
 }
 
 tests {
   test("admin can login", function () {
     expect(res.getStatus()).to.equal(200);
     expect(res.getBody()).to.have.property("accessToken");
+    expect(res.getBody()).to.have.property("refreshToken");
+    expect(res.getBody().tokenType).to.equal("Bearer");
   });
 }

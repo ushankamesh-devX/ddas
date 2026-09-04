@@ -48,43 +48,58 @@ jobs:
             echo "Admin app not initialized yet; skipping."
           fi
 
-  mobile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Mobile checks
-        working-directory: mobile
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-            npm run lint --if-present
-            npm test --if-present
-          else
-            echo "Mobile app not initialized yet; skipping."
-          fi
-
-  # Enable this job once the backend has CI fixtures/test users and starts
-  # deterministically in GitHub Actions.
   bruno:
-    if: ${{ false }}
+    needs: backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Bruno CLI (pin exact version)
-        run: npm install -g @usebruno/cli@4
       - name: Start integration stack
-        run: docker compose -f infra/docker-compose.dev.yml up -d
+        run: docker compose --env-file infra/.env.example -f infra/docker-compose.dev.yml up -d
       - name: Start backend
+        env:
+          SPRING_PROFILES_ACTIVE: ci
+          JWT_SECRET: ci-only-signing-secret-never-use-outside-tests-32chars
+          APP_FIXTURE_PASSWORD: ChangeMeInCI
         run: |
-          echo "Wire the Spring Boot test profile here."
+          chmod +x backend/mvnw
+          nohup backend/mvnw -B -f backend/pom.xml spring-boot:run > backend-ci.log 2>&1 &
+          echo $! > backend-ci.pid
+      - name: Wait for backend health
+        run: |
+          for attempt in {1..60}; do
+            if curl --fail --silent http://localhost:8080/actuator/health > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat backend-ci.log
           exit 1
-      - name: Bruno tests
+      - name: Bruno foundation tests
+        working-directory: bruno
         run: |
-          cd bruno
-          bru run --env environments/ci.bru --reporter-junit results.xml
+          npm ci
+          npm run test:ci:smoke
+      - name: Upload backend and Bruno reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bruno-foundation-results
+          path: |
+            backend-ci.log
+            bruno/results.xml
+          if-no-files-found: ignore
+      - name: Stop backend and integration stack
+        if: always()
+        run: |
+          if [ -f backend-ci.pid ]; then
+            kill "$(cat backend-ci.pid)" || true
+          fi
+          docker compose --env-file infra/.env.example -f infra/docker-compose.dev.yml down

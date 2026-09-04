@@ -115,6 +115,51 @@ Minimum test classes:
 6. public/private leakage where relevant
 7. state conflict/idempotency where relevant
 
+## Shared backend foundation for parallel development
+
+Parallel domain work may begin after these commands pass on a clean checkout:
+
+```bash
+cd backend
+./mvnw test
+cd ../bruno
+npm ci
+npm run test:local:smoke
+```
+
+The smoke command expects the local infrastructure and backend to already be
+running. It verifies health, login, refresh, current-user identity, dam scope,
+cross-dam denial, and civilian denial.
+
+The following code is shared infrastructure. Dev 1 owns its initial
+implementation; changes require review from another affected domain owner:
+
+| Contract | Purpose |
+| --- | --- |
+| `CurrentUserProvider` | authenticated active user and global roles |
+| `DamReader` | authoritative dam lookup without direct repository coupling |
+| `DamAccessChecker` | live dam membership, dam role, and emergency permission checks |
+| `GeometryMapper` | validated GeoJSON to SRID 4326 JTS geometry conversion |
+| `AuditService` | transactionally persisted security/state-change audit events |
+
+Domain modules must not query `AppUserRepository`, `DamRepository`, or
+`DamStaffRepository` directly. They consume the contracts above. This keeps
+authorization behavior consistent and prevents four parallel implementations
+of auth and dam scoping.
+
+After the foundation is shared, ownership continues as follows:
+
+- Dev 1: sensors, readings, device credentials, MQTT ingestion, and dam
+  monitoring APIs.
+- Dev 2: alerts, recipients, acknowledgements, transactional outbox, and
+  notification adapters.
+- Dev 3: risk zones, safe locations, routes, and emergency-state workflows.
+- Dev 4: households, citizen reports, report images, moderation, and news.
+
+Every dam-owned use case must call `DamAccessChecker`; every cross-domain dam
+lookup must call `DamReader`; every geometry write must use `GeometryMapper`;
+and every privileged mutation must record through `AuditService`.
+
 ## CI
 
 Every PR should eventually run:
@@ -129,6 +174,8 @@ Every PR should eventually run:
 
 ## Local development
 
+New developers must complete the first-time setup and verification in `docs/14-LOCAL-DEVELOPMENT-SETUP.md`.
+
 Run code directly:
 - Spring Boot directly
 - Next.js directly
@@ -139,6 +186,40 @@ Run infrastructure in Docker:
 - Mosquitto
 - MinIO
 - Redis only when used
+
+### Admin web
+
+The admin application is in `admin-web/` and uses Next.js, TypeScript, and Tailwind CSS.
+
+First-time setup from the repository root:
+
+```powershell
+Copy-Item admin-web/.env.example admin-web/.env.local
+Set-Location admin-web
+npm install
+npm run dev
+```
+
+For subsequent starts:
+
+```powershell
+Set-Location admin-web
+npm run dev
+```
+
+Open `http://localhost:3000`. The local API URL is configured through
+`NEXT_PUBLIC_API_BASE_URL` and defaults to `http://localhost:8080`.
+
+Before opening a pull request, run:
+
+```powershell
+npm run lint
+npm run build
+```
+
+Do not place secrets in variables prefixed with `NEXT_PUBLIC_`; Next.js exposes
+those values to browser code. See `docs/14-LOCAL-DEVELOPMENT-SETUP.md` for the
+complete infrastructure, backend, and frontend startup sequence.
 
 ## Secrets
 

@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+  body: json
 }
 
 headers {
@@ -14,15 +15,15 @@ headers {
   Idempotency-Key: civilian-alert-denied
 }
 
-body {
-{
+body:json {
+  {
   "severity": "WARNING",
   "title": "Unauthorized",
   "message": "No",
   "riskZoneIds": [
     "{{zoneId}}"
   ]
-}
+  }
 }
 
 tests {

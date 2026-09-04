@@ -1,0 +1,14 @@
+{
+  "name": "ddas-bruno-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:local:smoke": "bru run --env-file environments/local.bru --tags foundation",
+    "test:local": "bru run --env-file environments/local.bru",
+    "test:ci:smoke": "bru run --env-file environments/ci.bru --tags foundation --reporter-junit results.xml",
+    "test:ci": "bru run --env-file environments/ci.bru --reporter-junit results.xml"
+  },
+  "devDependencies": {
+    "@usebruno/cli": "4.1.0"
+  }
+}

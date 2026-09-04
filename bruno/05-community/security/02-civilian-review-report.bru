@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/reports/{{reportId}}/review
+  body: json
 }
 
 headers {
@@ -13,11 +14,11 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "decision": "VERIFIED",
   "note": "No"
-}
+  }
 }
 
 tests {

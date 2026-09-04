@@ -9,6 +9,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/risk-zones
+  body: json
 }
 
 headers {
@@ -16,8 +17,8 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "CRIT-01",
   "name": "Critical Zone 1",
   "severity": "CRITICAL",
@@ -50,7 +51,7 @@ body {
       ]
     ]
   }
-}
+  }
 }
 
 tests {

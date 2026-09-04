@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+  body: json
 }
 
 headers {
@@ -14,15 +15,15 @@ headers {
   Idempotency-Key: cross-domain-zone-contract
 }
 
-body {
-{
+body:json {
+  {
   "severity": "WARNING",
   "title": "Cross-domain isolation",
   "message": "Should fail",
   "riskZoneIds": [
     "{{otherDamZoneId}}"
   ]
-}
+  }
 }
 
 tests {

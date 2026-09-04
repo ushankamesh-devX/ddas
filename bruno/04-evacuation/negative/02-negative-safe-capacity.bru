@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/safe-locations
+  body: json
 }
 
 headers {
@@ -13,8 +14,8 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "BAD-SAFE",
   "name": "Invalid Shelter",
   "capacity": -1,
@@ -26,7 +27,7 @@ body {
       7.14
     ]
   }
-}
+  }
 }
 
 tests {

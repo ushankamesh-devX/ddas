@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors
+  body: json
 }
 
 headers {
@@ -13,13 +14,13 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "NOPE",
   "name": "Unauthorized",
   "sensorType": "WATER_LEVEL",
   "unit": "m"
-}
+  }
 }
 
 tests {

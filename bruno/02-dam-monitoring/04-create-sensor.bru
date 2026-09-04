@@ -9,6 +9,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/sensors
+  body: json
 }
 
 headers {
@@ -16,8 +17,8 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "WL-001",
   "name": "Reservoir Water Level",
   "sensorType": "WATER_LEVEL",
@@ -33,7 +34,7 @@ body {
   "exposeExactLocation": false,
   "warningThreshold": 80,
   "criticalThreshold": 90
-}
+  }
 }
 
 tests {

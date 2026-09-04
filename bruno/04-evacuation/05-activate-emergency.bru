@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/emergency/activate
+  body: json
 }
 
 headers {
@@ -14,10 +15,10 @@ headers {
   Idempotency-Key: bruno-emergency-001
 }
 
-body {
-{
+body:json {
+  {
   "reason": "Bruno emergency flow test"
-}
+  }
 }
 
 tests {

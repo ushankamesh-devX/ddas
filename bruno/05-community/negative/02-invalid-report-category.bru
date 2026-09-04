@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/reports
+  body: json
 }
 
 headers {
@@ -14,12 +15,12 @@ headers {
   Idempotency-Key: bad-report-002
 }
 
-body {
-{
+body:json {
+  {
   "damId": "{{damId}}",
   "category": "ALIENS",
   "description": "Invalid"
-}
+  }
 }
 
 tests {

@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams
+  body: json
 }
 
 headers {
@@ -13,13 +14,13 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "code": "CI-DAM-001",
   "name": "CI Test Dam",
   "description": "Created by Bruno",
   "isPublic": true
-}
+  }
 }
 
 tests {

@@ -1,0 +1,23 @@
+meta {
+  name: Civilian cannot list staff dams
+  type: http
+  seq: 2
+  tags: [
+    foundation
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams
+}
+
+headers {
+  Authorization: Bearer {{civilianToken}}
+}
+
+tests {
+  test("civilian receives forbidden", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().code).to.equal("DAM_ACCESS_DENIED");
+  });
+}

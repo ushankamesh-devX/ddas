@@ -28,14 +28,15 @@ All four are full-stack developers. Ownership means "primary accountable person"
 
 1. Read `docs/00-MASTER-DESIGN.md`.
 2. Read `docs/01-DEVELOPMENT-WORKFLOW.md`.
-3. Each developer reads their file under `docs/dev-plans/`.
-4. Start infrastructure:
-   ```bash
-   docker compose -f infra/docker-compose.dev.yml up -d
-   ```
+3. Complete `docs/14-LOCAL-DEVELOPMENT-SETUP.md`.
+4. Each developer reads their file under `docs/dev-plans/`.
 5. Run Spring Boot, Next.js and React Native directly during development.
 6. Open `bruno/` as the shared Bruno collection.
 7. No API feature is complete until its Bruno tests pass and API documentation is updated.
+
+The backend authentication/dam foundation and its parallel-development
+contracts are documented in `backend/README.md`. Before starting domain work,
+run the foundation gate described in `docs/01-DEVELOPMENT-WORKFLOW.md`.
 
 ## Contract rules
 

@@ -12,8 +12,7 @@
 8. Bruno HTTP black-box smoke/regression tests
 9. MQTT broker black-box tests (auth + ACL + telemetry)
 10. build Docker images
-9. build Docker images
-10. publish reports
+11. publish reports
 
 ## CD stages
 
@@ -36,15 +35,21 @@ The collection in `/bruno` is the master API black-box suite.
 Examples:
 ```bash
 cd bruno
-bru run --env environments/local.bru
+npm ci
+npm run test:local:smoke
 ```
 
 CI report:
 ```bash
-bru run --env environments/ci.bru --reporter-junit results.xml
+npm ci
+npm run test:ci:smoke
 ```
 
-Pin the Bruno CLI version in CI.
+The repository pins the Bruno CLI in `bruno/package.json` and
+`bruno/package-lock.json`. CI starts PostGIS, Mosquitto, MinIO, and the backend,
+waits for health, runs the executable foundation tag, and uploads the backend
+log and JUnit report even on failure. Domain owners expand the full suite as
+their endpoints become executable.
 
 ## Important deployment rule
 

@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices
+  body: json
 }
 
 headers {
@@ -13,12 +14,12 @@ headers {
   Content-Type: application/json
 }
 
-body {
-{
+body:json {
+  {
   "name": "Bad Device",
   "deviceType": "GATEWAY",
   "authMethod": "DEVICE_KEY"
-}
+  }
 }
 
 tests {

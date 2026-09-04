@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: ci
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/dam_alert}
+    username: ${DB_USERNAME:damapp}
+    password: ${DB_PASSWORD:damapp_dev}
+
+app:
+  fixtures:
+    enabled: true
+    password: ${APP_FIXTURE_PASSWORD:ChangeMeInCI}

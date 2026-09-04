@@ -14,6 +14,7 @@ headers {
 
 tests {
   test("returns success", function () {
-    expect(res.getStatus()).to.be.oneOf([200, 201, 204]);
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().id).to.equal("{{damId}}");
   });
 }

@@ -9,6 +9,7 @@ This is the single shared black-box API collection.
 - `03-alerts`
 - `04-evacuation`
 - `05-community`
+- `06-cross-domain`
 
 ## Important
 
@@ -28,12 +29,16 @@ Do not commit real passwords or tokens.
 ## Run locally
 ```bash
 cd bruno
-bru run --env environments/local.bru
+npm ci
+npm run test:local:smoke
 ```
+
+The smoke suite covers the currently executable health, authentication, current-user,
+and dam-scope foundation. Run the complete evolving contract with `npm run test:local`.
 
 ## CI
 ```bash
-bru run --env environments/ci.bru --reporter-junit results.xml
+npm run test:ci:smoke
 ```
 
-Use a pinned Bruno CLI version in CI.
+The Bruno CLI version is pinned in `package.json` and `package-lock.json`.

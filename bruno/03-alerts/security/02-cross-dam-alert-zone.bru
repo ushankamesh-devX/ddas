@@ -6,6 +6,7 @@ meta {
 
 post {
   url: {{baseUrl}}/api/v1/dams/{{damId}}/alerts
+  body: json
 }
 
 headers {
@@ -14,15 +15,15 @@ headers {
   Idempotency-Key: cross-dam-zone
 }
 
-body {
-{
+body:json {
+  {
   "severity": "WARNING",
   "title": "Cross dam",
   "message": "No",
   "riskZoneIds": [
     "{{otherDamZoneId}}"
   ]
-}
+  }
 }
 
 tests {

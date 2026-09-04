@@ -1,0 +1,23 @@
+meta {
+  name: Operator cannot read another dam
+  type: http
+  seq: 1
+  tags: [
+    foundation
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{otherDamId}}
+}
+
+headers {
+  Authorization: Bearer {{operatorToken}}
+}
+
+tests {
+  test("cross-dam access is forbidden", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().code).to.equal("DAM_ACCESS_DENIED");
+  });
+}

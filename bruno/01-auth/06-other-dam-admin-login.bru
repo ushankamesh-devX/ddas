@@ -1,0 +1,35 @@
+meta {
+  name: Dam B Administrator Login
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/auth/login
+  body: json
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+  "email": "{{otherDamAdminEmail}}",
+  "password": "{{otherDamAdminPassword}}"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.accessToken) {
+    bru.setEnvVar("otherDamAdminToken", body.accessToken);
+  }
+}
+
+tests {
+  test("Dam B administrator can login", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.have.property("accessToken");
+  });
+}
