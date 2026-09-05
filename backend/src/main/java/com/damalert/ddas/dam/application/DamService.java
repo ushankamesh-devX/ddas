@@ -17,6 +17,10 @@ import com.damalert.ddas.common.security.CurrentUser;
 import com.damalert.ddas.dam.domain.Dam;
 import com.damalert.ddas.dam.persistence.DamRepository;
 import com.damalert.ddas.dam.persistence.DamStaffRepository;
+import com.damalert.ddas.common.geo.GeoJsonPolygon;
+import com.damalert.ddas.common.geo.GeometryMapper;
+import com.damalert.ddas.dam.domain.DamOperationalState;
+import com.damalert.ddas.dam.domain.DamStaffRole;
 
 @Service
 @Profile("!standalone")
@@ -27,17 +31,20 @@ public class DamService implements DamReader {
 	private final DamStaffRepository staffRepository;
 	private final DamAccessChecker accessChecker;
 	private final AuditService auditService;
+	private final GeometryMapper geometryMapper;
 
 	public DamService(
 		DamRepository damRepository,
 		DamStaffRepository staffRepository,
 		DamAccessChecker accessChecker,
-		AuditService auditService
+		AuditService auditService,
+		GeometryMapper geometryMapper
 	) {
 		this.damRepository = damRepository;
 		this.staffRepository = staffRepository;
 		this.accessChecker = accessChecker;
 		this.auditService = auditService;
+		this.geometryMapper = geometryMapper;
 	}
 
 	@Transactional(readOnly = true)
@@ -86,11 +93,43 @@ public class DamService implements DamReader {
 		return summary(saved);
 	}
 
+	public DamSummary update(CurrentUser user, UUID damId, String name, String description,
+		String publicStatusMessage, GeoJsonPolygon area, boolean publicVisible) {
+		accessChecker.requireRole(user, damId, DamStaffRole.DAM_ADMIN);
+		Dam dam = requireEntity(damId);
+		dam.update(name.trim(), description, publicStatusMessage,
+			area == null ? null : geometryMapper.toPolygon(area), publicVisible);
+		auditService.record(new AuditEvent(damId, user.userId(), "DAM_UPDATED", "dam", damId, null,
+			Map.of("name", dam.getName(), "isPublic", dam.isPublicVisible())));
+		return summary(dam);
+	}
+
+	public DamSummary updateState(CurrentUser user, UUID damId, DamOperationalState state, String publicStatusMessage) {
+		accessChecker.requireRole(user, damId, DamStaffRole.DAM_ADMIN, DamStaffRole.DAM_OPERATOR);
+		Dam dam = requireEntity(damId);
+		dam.setOperationalState(state, publicStatusMessage);
+		auditService.record(new AuditEvent(damId, user.userId(), "DAM_STATE_UPDATED", "dam", damId, null,
+			Map.of("state", state.name())));
+		return summary(dam);
+	}
+
+	public void deactivate(CurrentUser user, UUID damId) {
+		if (!user.hasGlobalRole("SUPER_ADMIN")) {
+			throw new ForbiddenException("DAM_DELETE_FORBIDDEN", "Only a platform administrator can deactivate a dam.");
+		}
+		Dam dam = requireEntity(damId);
+		dam.deactivate();
+		auditService.record(new AuditEvent(damId, user.userId(), "DAM_DEACTIVATED", "dam", damId, null, Map.of()));
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public DamSummary requireDam(UUID damId) {
+		return summary(requireEntity(damId));
+	}
+
+	private Dam requireEntity(UUID damId) {
 		return damRepository.findById(damId)
-			.map(this::summary)
 			.orElseThrow(() -> new NotFoundException("DAM_NOT_FOUND", "Dam does not exist."));
 	}
 

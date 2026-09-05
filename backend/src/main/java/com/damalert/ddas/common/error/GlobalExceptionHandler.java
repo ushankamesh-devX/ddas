@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -40,6 +42,18 @@ public class GlobalExceptionHandler {
 	ResponseEntity<ApiError> handleUnreadableBody(HttpMessageNotReadableException exception, HttpServletRequest request) {
 		return ResponseEntity.badRequest()
 			.body(error("INVALID_REQUEST_BODY", "The request body is malformed.", Map.of(), request));
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+		return ResponseEntity.badRequest().body(error("INVALID_PATH_PARAMETER",
+			"A path or query parameter has an invalid value.", Map.of("parameter", exception.getName()), request));
+	}
+
+	@ExceptionHandler(NoResourceFoundException.class)
+	ResponseEntity<ApiError> handleMissingRoute(NoResourceFoundException exception, HttpServletRequest request) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(error("ROUTE_NOT_FOUND", "The requested API route does not exist.", Map.of(), request));
 	}
 
 	@ExceptionHandler(Exception.class)

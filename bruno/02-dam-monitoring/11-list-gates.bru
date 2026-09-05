@@ -1,0 +1,20 @@
+meta {
+  name: List Gates
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/gates
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
+
+tests {
+  test("gate list is available", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
+  });
+}

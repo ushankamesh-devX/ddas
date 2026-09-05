@@ -20,6 +20,10 @@ import com.damalert.ddas.dam.domain.DamStaffId;
 import com.damalert.ddas.dam.domain.DamStaffRole;
 import com.damalert.ddas.dam.persistence.DamRepository;
 import com.damalert.ddas.dam.persistence.DamStaffRepository;
+import com.damalert.ddas.monitoring.domain.Sensor;
+import com.damalert.ddas.monitoring.domain.SensorVisibility;
+import com.damalert.ddas.monitoring.domain.ThresholdDirection;
+import com.damalert.ddas.monitoring.persistence.SensorRepository;
 
 @Component
 @ConditionalOnProperty(name = "app.fixtures.enabled", havingValue = "true")
@@ -34,6 +38,7 @@ public class LocalFixtures implements ApplicationRunner {
 	private final DamStaffRepository staffRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final Environment environment;
+	private final SensorRepository sensorRepository;
 
 	public LocalFixtures(
 		AppUserRepository userRepository,
@@ -41,7 +46,8 @@ public class LocalFixtures implements ApplicationRunner {
 		DamRepository damRepository,
 		DamStaffRepository staffRepository,
 		PasswordEncoder passwordEncoder,
-		Environment environment
+		Environment environment,
+		SensorRepository sensorRepository
 	) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -49,6 +55,7 @@ public class LocalFixtures implements ApplicationRunner {
 		this.staffRepository = staffRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.environment = environment;
+		this.sensorRepository = sensorRepository;
 	}
 
 	@Override
@@ -96,6 +103,12 @@ public class LocalFixtures implements ApplicationRunner {
 		ensureStaff(DAM_A_ID, operator.getId(), DamStaffRole.DAM_OPERATOR, true);
 		ensureStaff(DAM_A_ID, engineer.getId(), DamStaffRole.DAM_ENGINEER, false);
 		ensureStaff(DAM_B_ID, damBAdmin.getId(), DamStaffRole.DAM_ADMIN, true);
+		ensureSensor("00000000-0000-0000-0000-000000000101", DAM_A_ID, "WL-FIXTURE",
+			"Reservoir Water Level", SensorVisibility.PUBLIC_SUMMARY);
+		ensureSensor("00000000-0000-0000-0000-000000000102", DAM_B_ID, "RAIN-FIXTURE",
+			"Dam B Rainfall", SensorVisibility.PRIVATE);
+		ensureSensor("00000000-0000-0000-0000-000000000103", DAM_A_ID, "PRIVATE-FIXTURE",
+			"Private Engineering Sensor", SensorVisibility.PRIVATE);
 
 		// The super administrator intentionally has platform-wide access without a dam_staff row.
 		// The civilian intentionally has no dam staff assignment.
@@ -121,6 +134,14 @@ public class LocalFixtures implements ApplicationRunner {
 		DamStaffId id = new DamStaffId(damId, userId);
 		if (!staffRepository.existsById(id)) {
 			staffRepository.save(new DamStaff(id, role, canTriggerEmergency));
+		}
+	}
+
+	private void ensureSensor(String id, UUID damId, String code, String name, SensorVisibility visibility) {
+		UUID sensorId = UUID.fromString(id);
+		if (!sensorRepository.existsById(sensorId)) {
+			sensorRepository.save(new Sensor(sensorId, damId, code, name, "WATER_LEVEL", "m", null,
+				visibility, false, null, null, ThresholdDirection.HIGH));
 		}
 	}
 

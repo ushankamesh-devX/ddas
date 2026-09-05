@@ -12,6 +12,15 @@ spring:
     locations: classpath:db/migration
 
 app:
+  monitoring:
+    stale-after: ${SENSOR_STALE_AFTER:5m}
+    max-past-age: ${TELEMETRY_MAX_PAST_AGE:30d}
+    max-future-skew: ${TELEMETRY_MAX_FUTURE_SKEW:5m}
+  mqtt:
+    enabled: ${MQTT_ENABLED:false}
+    broker-uri: ${MQTT_BROKER_URI:tcp://localhost:1883}
+    username: ${MQTT_USERNAME:}
+    password: ${MQTT_PASSWORD:}
   security:
     cors:
       allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000}

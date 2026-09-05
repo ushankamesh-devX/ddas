@@ -12,6 +12,7 @@ app:
     enabled: ${APP_FIXTURES_ENABLED:true}
     password: ${APP_FIXTURE_PASSWORD:ChangeMe123!}
   mqtt:
+    enabled: ${MQTT_ENABLED:true}
     broker-uri: ${MQTT_BROKER_URI:tcp://localhost:1883}
     username: ${MQTT_USERNAME:}
     password: ${MQTT_PASSWORD:}

@@ -48,6 +48,21 @@ jobs:
             echo "Admin app not initialized yet; skipping."
           fi
 
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Mobile checks
+        working-directory: mobile
+        run: |
+          npm ci
+          npm run typecheck
+
   bruno:
     needs: backend
     runs-on: ubuntu-latest
@@ -82,16 +97,16 @@ jobs:
           done
           cat backend-ci.log
           exit 1
-      - name: Bruno foundation tests
+      - name: Bruno foundation and Dev 1 tests
         working-directory: bruno
         run: |
           npm ci
-          npm run test:ci:smoke
+          npm run test:ci:dev1
       - name: Upload backend and Bruno reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: bruno-foundation-results
+          name: bruno-dev1-results
           path: |
             backend-ci.log
             bruno/results.xml

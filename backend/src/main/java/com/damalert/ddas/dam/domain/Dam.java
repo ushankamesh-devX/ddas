@@ -3,6 +3,8 @@ package com.damalert.ddas.dam.domain;
 import java.time.Instant;
 import java.util.UUID;
 
+import org.locationtech.jts.geom.Polygon;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,6 +34,9 @@ public class Dam {
 
 	@Column(name = "public_status_message")
 	private String publicStatusMessage;
+
+	@Column(columnDefinition = "geometry(Polygon,4326)")
+	private Polygon area;
 
 	@Column(name = "is_public", nullable = false)
 	private boolean publicVisible;
@@ -91,5 +96,27 @@ public class Dam {
 
 	public boolean isActive() {
 		return active;
+	}
+
+	public Polygon getArea() { return area; }
+
+	public void update(String name, String description, String publicStatusMessage, Polygon area, boolean publicVisible) {
+		this.name = name;
+		this.description = description;
+		this.publicStatusMessage = publicStatusMessage;
+		this.area = area;
+		this.publicVisible = publicVisible;
+		this.updatedAt = Instant.now();
+	}
+
+	public void setOperationalState(DamOperationalState state, String publicStatusMessage) {
+		this.operationalState = state;
+		this.publicStatusMessage = publicStatusMessage;
+		this.updatedAt = Instant.now();
+	}
+
+	public void deactivate() {
+		this.active = false;
+		this.updatedAt = Instant.now();
 	}
 }

@@ -1,0 +1,16 @@
+meta {
+  name: Public Sensor History
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/sensors/{{sensorId}}/readings?size=24
+}
+
+tests {
+  test("allowed public history is available", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.be.an("array");
+  });
+}

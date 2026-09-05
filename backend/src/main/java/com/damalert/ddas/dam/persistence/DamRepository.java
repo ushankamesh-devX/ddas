@@ -13,5 +13,7 @@ public interface DamRepository extends JpaRepository<Dam, UUID> {
 
 	List<Dam> findAllByIdInOrderByNameAsc(List<UUID> ids);
 
+	List<Dam> findAllByPublicVisibleTrueAndActiveTrueOrderByNameAsc();
+
 	boolean existsByCode(String code);
 }

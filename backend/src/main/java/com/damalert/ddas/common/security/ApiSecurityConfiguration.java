@@ -46,6 +46,7 @@ public class ApiSecurityConfiguration {
 			.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
 				.requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout").permitAll()
+				.requestMatchers("/api/v1/public/**").permitAll()
 				.anyRequest().authenticated())
 			.oauth2ResourceServer(oauth2 -> oauth2
 				.jwt(Customizer.withDefaults())
