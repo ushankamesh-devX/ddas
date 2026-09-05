@@ -1,0 +1,55 @@
+meta {
+  name: Seed - route for route-status tests
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/evacuation-routes
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+script:pre-request {
+  bru.setVar("secSuffix", Date.now().toString().slice(-9));
+}
+
+body:json {
+  {
+  "code": "SEC-ROUTE-{{secSuffix}}",
+  "name": "Route status fixture route",
+  "fromZoneId": "{{secZoneId}}",
+  "safeLocationId": "{{secSafeLocationId}}",
+  "routeStatus": "ACTIVE",
+  "publicVisible": true,
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        80.305,
+        7.305
+      ],
+      [
+        80.32,
+        7.32
+      ]
+    ]
+  }
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("secRouteId", body.id);
+}
+
+tests {
+  test("fixture route created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().routeStatus).to.equal("ACTIVE");
+  });
+}

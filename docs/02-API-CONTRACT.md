@@ -85,18 +85,21 @@ Civilian:
 
 Risk zones:
 - `GET /api/v1/dams/{damId}/risk-zones`
+- `GET /api/v1/dams/{damId}/risk-zones/{zoneId}`
 - `POST /api/v1/dams/{damId}/risk-zones`
 - `PATCH /api/v1/dams/{damId}/risk-zones/{zoneId}`
 - `DELETE /api/v1/dams/{damId}/risk-zones/{zoneId}`
 
 Safe locations:
 - `GET /api/v1/dams/{damId}/safe-locations`
+- `GET /api/v1/dams/{damId}/safe-locations/{safeLocationId}`
 - `POST /api/v1/dams/{damId}/safe-locations`
 - `PATCH /api/v1/dams/{damId}/safe-locations/{safeLocationId}`
 - `DELETE /api/v1/dams/{damId}/safe-locations/{safeLocationId}`
 
 Routes:
 - `GET /api/v1/dams/{damId}/evacuation-routes`
+- `GET /api/v1/dams/{damId}/evacuation-routes/{routeId}`
 - `POST /api/v1/dams/{damId}/evacuation-routes`
 - `PATCH /api/v1/dams/{damId}/evacuation-routes/{routeId}`
 - `DELETE /api/v1/dams/{damId}/evacuation-routes/{routeId}`
@@ -110,6 +113,23 @@ Public:
 - `GET /api/v1/public/dams/{damId}/evacuation`
 - `GET /api/v1/public/dams/{damId}/safe-locations`
 - `GET /api/v1/public/dams/{damId}/evacuation-routes`
+
+Evacuation behaviour notes:
+
+- Zone/safe-location/route writes require `DAM_ADMIN` or `DAM_ENGINEER`
+  (safe locations also allow `FIELD_OFFICER`). Emergency activate/clear requires the
+  per-staff `can_trigger_emergency` permission, checked through `DamAccessChecker`.
+- A route's `fromZoneId` and `safeLocationId` must belong to the same dam as the path
+  variable. A reference to another dam's zone or safe location returns `404`.
+- Activate and clear are idempotent. Requesting a transition that already happened
+  returns the current state with `200` and records no second audit event, so a duplicate
+  activation never fails during a live emergency.
+- A `code` is unique per dam. A duplicate returns `409`.
+- The public snapshot carries `generatedAt` and `version` for offline caching. It includes
+  `BLOCKED`/`CLOSED` routes with `recommended: false` and `FULL`/`CLOSED` shelters with
+  `acceptingPeople: false`, rather than omitting them, so a client holding a stale cache
+  learns that a route or shelter has been taken out of service.
+- Public projections omit operational fields such as `currentOccupancy`.
 
 ## Community
 

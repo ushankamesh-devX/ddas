@@ -1,0 +1,21 @@
+meta {
+  name: Risk zones require authentication
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/risk-zones
+}
+
+tests {
+  test("status is 401", function () {
+    expect(res.getStatus()).to.equal(401);
+  });
+
+  test("error envelope has no stack trace", function () {
+    const body = res.getBody();
+    expect(body).to.have.property("code");
+    expect(JSON.stringify(body)).to.not.include("Exception");
+  });
+}

@@ -42,4 +42,45 @@ class GeometryMapperTests {
 			.isInstanceOf(BadRequestException.class)
 			.hasMessageContaining("must be closed");
 	}
+
+	@Test
+	void pointSurvivesARoundTripInLongitudeLatitudeOrder() {
+		GeoJsonPoint original = new GeoJsonPoint("Point", List.of(80.1234, 7.1234));
+
+		GeoJsonPoint roundTripped = mapper.toGeoJson(mapper.toPoint(original));
+
+		assertThat(roundTripped.type()).isEqualTo("Point");
+		assertThat(roundTripped.coordinates()).containsExactly(80.1234, 7.1234);
+	}
+
+	@Test
+	void lineStringSurvivesARoundTrip() {
+		GeoJsonLineString original = new GeoJsonLineString("LineString", List.of(
+			List.of(80.10, 7.10),
+			List.of(80.20, 7.20)
+		));
+
+		GeoJsonLineString roundTripped = mapper.toGeoJson(mapper.toLineString(original));
+
+		assertThat(roundTripped.type()).isEqualTo("LineString");
+		assertThat(roundTripped.coordinates()).isEqualTo(original.coordinates());
+	}
+
+	@Test
+	void polygonSurvivesARoundTripAndStaysClosed() {
+		GeoJsonPolygon original = new GeoJsonPolygon("Polygon", List.of(List.of(
+			List.of(80.12, 7.12),
+			List.of(80.13, 7.12),
+			List.of(80.13, 7.13),
+			List.of(80.12, 7.13),
+			List.of(80.12, 7.12)
+		)));
+
+		GeoJsonPolygon roundTripped = mapper.toGeoJson(mapper.toPolygon(original));
+
+		assertThat(roundTripped.type()).isEqualTo("Polygon");
+		assertThat(roundTripped.coordinates()).isEqualTo(original.coordinates());
+		assertThat(roundTripped.coordinates().getFirst().getFirst())
+			.isEqualTo(roundTripped.coordinates().getFirst().getLast());
+	}
 }

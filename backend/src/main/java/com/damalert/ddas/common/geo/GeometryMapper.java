@@ -42,6 +42,31 @@ public class GeometryMapper {
 		return polygon;
 	}
 
+	public GeoJsonPoint toGeoJson(Point point) {
+		return new GeoJsonPoint("Point", position(point.getCoordinate()));
+	}
+
+	public GeoJsonLineString toGeoJson(LineString lineString) {
+		return new GeoJsonLineString("LineString", positions(lineString.getCoordinates()));
+	}
+
+	public GeoJsonPolygon toGeoJson(Polygon polygon) {
+		List<List<List<Double>>> rings = new java.util.ArrayList<>();
+		rings.add(positions(polygon.getExteriorRing().getCoordinates()));
+		for (int index = 0; index < polygon.getNumInteriorRing(); index++) {
+			rings.add(positions(polygon.getInteriorRingN(index).getCoordinates()));
+		}
+		return new GeoJsonPolygon("Polygon", List.copyOf(rings));
+	}
+
+	private List<List<Double>> positions(Coordinate[] coordinates) {
+		return java.util.Arrays.stream(coordinates).map(this::position).toList();
+	}
+
+	private List<Double> position(Coordinate coordinate) {
+		return List.of(coordinate.getX(), coordinate.getY());
+	}
+
 	private LinearRing ring(List<List<Double>> positions) {
 		Coordinate[] coordinates = positions.stream().map(this::coordinate).toArray(Coordinate[]::new);
 		if (coordinates.length < 4 || !coordinates[0].equals2D(coordinates[coordinates.length - 1])) {

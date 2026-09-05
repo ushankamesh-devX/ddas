@@ -1,0 +1,60 @@
+meta {
+  name: Seed - create risk zone on Dam B
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{otherDamId}}/risk-zones
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{otherDamAdminToken}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+  "code": "DAMB-CROSS-01",
+  "name": "Dam B Cross-Isolation Fixture Zone",
+  "severity": "WARNING",
+  "evacuationRequired": false,
+  "publicVisible": true,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          81.12,
+          8.12
+        ],
+        [
+          81.13,
+          8.12
+        ],
+        [
+          81.13,
+          8.13
+        ],
+        [
+          81.12,
+          8.13
+        ],
+        [
+          81.12,
+          8.12
+        ]
+      ]
+    ]
+  }
+  }
+}
+
+tests {
+  // 409 is expected on a re-run against a database that already holds the fixture.
+  // The next request resolves the id either way, which keeps the suite re-runnable.
+  test("dam B fixture zone exists", function () {
+    expect(res.getStatus()).to.be.oneOf([201, 409]);
+  });
+}

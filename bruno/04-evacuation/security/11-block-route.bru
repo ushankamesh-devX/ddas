@@ -1,0 +1,34 @@
+meta {
+  name: Block an evacuation route
+  type: http
+  seq: 11
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/evacuation-routes/{{secRouteId}}
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+  "routeStatus": "BLOCKED",
+  "instructions": "Bridge washed out - do not use."
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("blockedRouteId", body.id);
+}
+
+tests {
+  test("route is blocked", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().routeStatus).to.equal("BLOCKED");
+  });
+}

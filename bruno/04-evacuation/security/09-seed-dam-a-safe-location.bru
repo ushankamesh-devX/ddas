@@ -1,0 +1,47 @@
+meta {
+  name: Seed - safe location for route-status tests
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/safe-locations
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+script:pre-request {
+  bru.setVar("secSuffix", Date.now().toString().slice(-9));
+}
+
+body:json {
+  {
+  "code": "SEC-SAFE-{{secSuffix}}",
+  "name": "Route status fixture shelter",
+  "capacity": 250,
+  "status": "AVAILABLE",
+  "publicVisible": true,
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      80.32,
+      7.32
+    ]
+  }
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("secSafeLocationId", body.id);
+}
+
+tests {
+  test("fixture safe location created", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

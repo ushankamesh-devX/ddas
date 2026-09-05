@@ -1,0 +1,25 @@
+meta {
+  name: Closed safe location is not recommended publicly
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/safe-locations
+}
+
+tests {
+  test("a closed safe location is not accepting people", function () {
+    expect(res.getStatus()).to.equal(200);
+    const locations = res.getBody() || [];
+    const closed = locations.find(location => location.id === bru.getEnvVar("closedSafeLocationId"));
+    expect(closed, "closed shelter should still be listed so the map can show it as unavailable").to.exist;
+    expect(closed.status).to.equal("CLOSED");
+    expect(closed.acceptingPeople).to.equal(false);
+  });
+
+  test("public safe locations never expose live occupancy", function () {
+    const text = JSON.stringify(res.getBody());
+    expect(text).to.not.include('"currentOccupancy"');
+  });
+}

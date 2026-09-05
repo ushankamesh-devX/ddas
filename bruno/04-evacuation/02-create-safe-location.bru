@@ -14,9 +14,13 @@ headers {
   Content-Type: application/json
 }
 
+script:pre-request {
+  bru.setVar("runSuffix", Date.now().toString().slice(-9));
+}
+
 body:json {
   {
-  "code": "SAFE-01",
+  "code": "SAFE-{{runSuffix}}",
   "name": "Central School",
   "capacity": 500,
   "status": "AVAILABLE",

@@ -1,0 +1,69 @@
+meta {
+  name: Seed - risk zone for route-status tests
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/risk-zones
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+script:pre-request {
+  // The security folder runs before the top-level requests, so it seeds its own
+  // fixtures rather than depending on ids another folder happens to have set.
+  bru.setVar("secSuffix", Date.now().toString().slice(-9));
+}
+
+body:json {
+  {
+  "code": "SEC-ZONE-{{secSuffix}}",
+  "name": "Route status fixture zone",
+  "severity": "HIGH_RISK",
+  "evacuationRequired": true,
+  "publicVisible": true,
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          80.30,
+          7.30
+        ],
+        [
+          80.31,
+          7.30
+        ],
+        [
+          80.31,
+          7.31
+        ],
+        [
+          80.30,
+          7.31
+        ],
+        [
+          80.30,
+          7.30
+        ]
+      ]
+    ]
+  }
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("secZoneId", body.id);
+}
+
+tests {
+  test("fixture zone created", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Close a safe location
+  type: http
+  seq: 13
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/safe-locations/{{secSafeLocationId}}
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+  "status": "CLOSED"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.id) bru.setEnvVar("closedSafeLocationId", body.id);
+}
+
+tests {
+  test("safe location is closed", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().status).to.equal("CLOSED");
+  });
+}

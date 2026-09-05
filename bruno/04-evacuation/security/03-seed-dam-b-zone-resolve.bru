@@ -1,0 +1,30 @@
+meta {
+  name: Seed - resolve Dam B zone id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/dams/{{otherDamId}}/risk-zones
+}
+
+headers {
+  Authorization: Bearer {{otherDamAdminToken}}
+}
+
+script:post-response {
+  const zones = res.getBody();
+  if (Array.isArray(zones)) {
+    const fixture = zones.find(zone => zone.code === "DAMB-CROSS-01");
+    if (fixture) {
+      bru.setEnvVar("otherDamZoneId", fixture.id);
+    }
+  }
+}
+
+tests {
+  test("dam B zone id is available for the cross-dam test", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(bru.getEnvVar("otherDamZoneId")).to.be.a("string").and.not.empty;
+  });
+}

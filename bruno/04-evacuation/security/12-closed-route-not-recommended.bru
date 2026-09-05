@@ -1,0 +1,27 @@
+meta {
+  name: Blocked route is not recommended publicly
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/api/v1/public/dams/{{damId}}/evacuation
+}
+
+tests {
+  test("a blocked route is returned but never recommended", function () {
+    expect(res.getStatus()).to.equal(200);
+    const routes = res.getBody().evacuationRoutes || [];
+    const blocked = routes.find(route => route.id === bru.getEnvVar("blockedRouteId"));
+    expect(blocked, "blocked route should still be visible so the map can show it as unusable").to.exist;
+    expect(blocked.routeStatus).to.equal("BLOCKED");
+    expect(blocked.recommended).to.equal(false);
+  });
+
+  test("every recommended route is ACTIVE", function () {
+    const routes = res.getBody().evacuationRoutes || [];
+    routes.filter(route => route.recommended).forEach(route => {
+      expect(route.routeStatus).to.equal("ACTIVE");
+    });
+  });
+}

@@ -1,10 +1,7 @@
 meta {
-  name: Create Risk Zone
+  name: Zone - invalid severity
   type: http
-  seq: 1
-  tags: [
-    smoke
-  ]
+  seq: 4
 }
 
 post {
@@ -17,17 +14,11 @@ headers {
   Content-Type: application/json
 }
 
-script:pre-request {
-  // Codes are unique per dam. A per-run suffix keeps the success path a real 201
-  // instead of a 409 the second time this suite runs against the same database.
-  bru.setVar("runSuffix", Date.now().toString().slice(-9));
-}
-
 body:json {
   {
-  "code": "CRIT-{{runSuffix}}",
-  "name": "Critical Zone 1",
-  "severity": "CRITICAL",
+  "code": "BAD-SEVERITY",
+  "name": "Invalid Severity Zone",
+  "severity": "APOCALYPTIC",
   "evacuationRequired": true,
   "publicVisible": true,
   "geometry": {
@@ -61,10 +52,7 @@ body:json {
 }
 
 tests {
-  test("zone created", function () {
-    expect(res.getStatus()).to.equal(201);
-    expect(res.getBody()).to.have.property("id");
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
   });
-  const body = res.getBody();
-  if (body && body.id) bru.setEnvVar("zoneId", body.id);
 }
