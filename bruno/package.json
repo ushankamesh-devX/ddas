@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "test:local:smoke": "bru run --env-file environments/local.bru --tags foundation",
+    "test:local:dev1": "bru run --env-file environments/local.bru --tags foundation && bru run 02-dam-monitoring --env-file environments/local.bru && bru run 02-dam-monitoring/negative --env-file environments/local.bru && bru run 02-dam-monitoring/security --env-file environments/local.bru && bru run 02-dam-monitoring/iot-devices --env-file environments/local.bru && bru run 02-dam-monitoring/iot-devices/security --env-file environments/local.bru",
+    "test:ci:dev1": "bru run --env-file environments/ci.bru --tags foundation && bru run 02-dam-monitoring --env-file environments/ci.bru && bru run 02-dam-monitoring/negative --env-file environments/ci.bru && bru run 02-dam-monitoring/security --env-file environments/ci.bru && bru run 02-dam-monitoring/iot-devices --env-file environments/ci.bru && bru run 02-dam-monitoring/iot-devices/security --env-file environments/ci.bru --reporter-junit results.xml",
     "test:local": "bru run --env-file environments/local.bru",
     "test:ci:smoke": "bru run --env-file environments/ci.bru --tags foundation --reporter-junit results.xml",
     "test:ci": "bru run --env-file environments/ci.bru --reporter-junit results.xml"

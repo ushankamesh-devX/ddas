@@ -1,0 +1,33 @@
+meta {
+  name: Create Gate
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/gates
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "code": "GATE-{{$timestamp}}",
+    "name": "Test Spillway Gate",
+    "location": { "type": "Point", "coordinates": [80.1235, 7.1235] },
+    "status": "PARTIAL",
+    "openingPercent": 25,
+    "visibility": "PUBLIC_SUMMARY"
+  }
+}
+
+tests {
+  test("gate created", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().openingPercent).to.equal(25);
+  });
+}

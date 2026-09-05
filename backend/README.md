@@ -46,6 +46,22 @@ Health is available at `http://localhost:8080/actuator/health`.
 - `GET /api/v1/dams/{damId}`
 - `GET /api/v1/dams/{damId}/staff`
 
+## Dam monitoring API
+
+- Dam updates/state: `PUT /api/v1/dams/{damId}`, `PATCH /api/v1/dams/{damId}/state`
+- Sensors: `/api/v1/dams/{damId}/sensors`
+- Sensor history: `/api/v1/dams/{damId}/sensors/{sensorId}/readings`
+- Latest telemetry: `/api/v1/dams/{damId}/telemetry/latest`
+- Authenticated SSE: `/api/v1/dams/{damId}/telemetry/stream`
+- Gates: `/api/v1/dams/{damId}/gates`
+- IoT devices: `/api/v1/dams/{damId}/iot-devices`
+- Public dams/maps/sensors: `/api/v1/public/dams/**`
+
+MQTT ingestion subscribes at QoS 1 to
+`dams/+/devices/+/telemetry` when `MQTT_ENABLED=true`. It validates the topic's
+dam/device identity, device lifecycle, sensor assignment, value/timestamp shape,
+and `messageId` idempotency before committing readings.
+
 Local fixture accounts all use the password configured by
 `APP_FIXTURE_PASSWORD` (the example local value is `ChangeMe123!`):
 

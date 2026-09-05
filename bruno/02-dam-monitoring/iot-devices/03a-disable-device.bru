@@ -1,0 +1,23 @@
+meta {
+  name: Disable IoT Device
+  type: http
+  seq: 3.1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/dams/{{damId}}/iot-devices/{{iotDeviceId}}/disable
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+  Content-Type: application/json
+}
+
+body:json {
+  { "reason": "Lifecycle regression test" }
+}
+
+tests {
+  test("device disabled", function () { expect(res.getStatus()).to.equal(204); });
+}

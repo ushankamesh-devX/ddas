@@ -34,6 +34,11 @@ All four are full-stack developers. Ownership means "primary accountable person"
 6. Open `bruno/` as the shared Bruno collection.
 7. No API feature is complete until its Bruno tests pass and API documentation is updated.
 
+Dev 1's implemented dam-monitoring API and verification commands are documented
+in `docs/15-DAM-MONITORING-API.md`. The admin console is in `admin-web/`, the
+public Expo client is in `mobile/`, and a local MQTT publisher is in
+`infra/sensor-simulator/`.
+
 The backend authentication/dam foundation and its parallel-development
 contracts are documented in `backend/README.md`. Before starting domain work,
 run the foundation gate described in `docs/01-DEVELOPMENT-WORKFLOW.md`.
